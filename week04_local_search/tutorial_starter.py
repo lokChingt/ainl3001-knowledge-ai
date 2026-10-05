@@ -98,7 +98,16 @@ class GridProblem(Problem):
         # 2. Check which action was requested.
         # 3. Return the resulting state.
 
-        pass
+        x, y = state
+
+        action_dict = {
+            "UP": (x - 1, y),
+            "DOWN": (x + 1, y),
+            "LEFT": (x, y - 1),
+            "RIGHT": (x, y + 1)
+        }
+
+        return action_dict[action]
 
 
 # --------------------------------------------------

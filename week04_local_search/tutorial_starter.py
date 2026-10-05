@@ -57,7 +57,35 @@ class GridProblem(Problem):
         # 4. Add valid actions to the list.
         # 5. Return the list.
 
-        pass
+        x, y = state
+        actions = []
+
+        possible_actions = [
+            "UP",
+            "DOWN",
+            "LEFT",
+            "RIGHT"
+        ]
+
+        movements = [
+            (x - 1, y),
+            (x + 1, y),
+            (x, y - 1),
+            (x, y + 1)
+        ]
+
+        for i, move in enumerate(movements):
+            mx, my = move
+
+            inside_grid = (
+                0 <= mx < GRID_SIZE and
+                0 <= my < GRID_SIZE
+            )
+
+            if inside_grid:
+                actions.append(possible_actions[i])
+
+        return actions
 
     def result(self, state, action):
         """

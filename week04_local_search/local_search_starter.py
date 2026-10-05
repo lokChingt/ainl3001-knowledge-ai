@@ -83,8 +83,21 @@ def count_conflicts(board):
     #   1. in the same row
     #   2. on the same diagonal
 
-    pass
+    n = len(board)
+    count = 0
 
+    for i in range(n):
+        for j in range(i + 1, n):
+            x1, y1 = i, board[i]
+            x2, y2 = j, board[j]
+
+            same_row = y1 == y2
+            same_diagonal = abs(x2 - x1) == abs(y2 - y1)
+
+            if same_row or same_diagonal:
+                count += 1
+
+    return count
 
 # --------------------------------------------------
 # TASK 2 — EXPLORE THE PROBLEM
@@ -178,24 +191,26 @@ def simulated_annealing(problem, start_board):
 
 if __name__ == "__main__":
 
-    board = [
+    """board = [
         random.randint(0, N - 1)
         for _ in range(N)
-    ]
+    ]"""
 
-    problem = QueensProblem(board)
+    test_board = [4, 4, 1, 5, 3, 2, 6, 6]
+
+    problem = QueensProblem(test_board)
 
     print("\nRandom Board")
-    print(board)
+    print(test_board)
 
     print("\nConflicts")
     print(
-        count_conflicts(board)
+        count_conflicts(test_board)
     )
 
     print("\nPossible Actions")
-
-    actions = problem.actions(board)
+    
+    actions = problem.actions(test_board)
 
     print(
         f"{len(actions)} actions available"
@@ -205,7 +220,7 @@ if __name__ == "__main__":
 
     neighbours = generate_neighbours(
         problem,
-        board
+        test_board
     )
 
     print(

@@ -60,22 +60,15 @@ class GridProblem(Problem):
         x, y = state
         actions = []
 
-        possible_actions = [
-            "UP",
-            "DOWN",
-            "LEFT",
-            "RIGHT"
-        ]
+        action_dict = {
+            "UP": (x - 1, y),
+            "DOWN": (x + 1, y),
+            "LEFT": (x, y - 1),
+            "RIGHT": (x, y + 1)
+        }
 
-        movements = [
-            (x - 1, y),
-            (x + 1, y),
-            (x, y - 1),
-            (x, y + 1)
-        ]
-
-        for i, move in enumerate(movements):
-            mx, my = move
+        for action, coord in action_dict.items():
+            mx, my = coord
 
             inside_grid = (
                 0 <= mx < GRID_SIZE and
@@ -83,7 +76,7 @@ class GridProblem(Problem):
             )
 
             if inside_grid:
-                actions.append(possible_actions[i])
+                actions.append(action)
 
         return actions
 

@@ -159,11 +159,36 @@ def hill_climbing(problem, start_board):
         return current
     """
 
+    def lowest_conflicts(neighbours):
+        min_conflicts = 100
+        lowest_conflicts_neighbour = []
+
+        for neighbour in neighbours:
+            curr_conflicts = count_conflicts(neighbour)
+
+            if curr_conflicts < min_conflicts:
+                min_conflicts = curr_conflicts
+                lowest_conflicts_neighbour = neighbour
+
+        #print("lowest_conflicts_neighbour:", lowest_conflicts_neighbour)
+        #print("min_conflicts", min_conflicts)
+
+        return lowest_conflicts_neighbour, min_conflicts
+
+
     current = start_board
 
-    # TODO
+    min_conflicts = count_conflicts(current)
 
-    pass
+    while min_conflicts > 0:
+        neighbours = generate_neighbours(
+            problem,
+            current
+        )
+
+        current, min_conflicts = lowest_conflicts(neighbours)
+
+    return current
 
 
 # --------------------------------------------------
@@ -232,3 +257,7 @@ if __name__ == "__main__":
     print(
         f"{len(neighbours)} neighbours generated"
     )
+
+    print("\nHill Climbing:")
+    current = hill_climbing(problem, test_board)
+    print(current)

@@ -213,7 +213,27 @@ def simulated_annealing(problem, start_board):
 
     # TODO
 
-    pass
+    while temperature > 0.01:
+        actions = problem.actions(current)
+
+        random_action = random.choice(actions)
+        random_neighbour = problem.result(current, random_action)
+
+        delta_e = count_conflicts(current) - count_conflicts(random_neighbour)
+        #print("random_neighbour", random_neighbour)
+        #print("conflicts", count_conflicts(random_neighbour))
+
+        if delta_e > 0:
+            current = random_neighbour
+        else:
+            accept_prob = math.exp(delta_e / temperature)
+
+            if accept_prob > random.random():
+                current = random_neighbour
+
+        temperature *= cooling_rate
+
+    return current
 
 
 # --------------------------------------------------
@@ -222,26 +242,24 @@ def simulated_annealing(problem, start_board):
 
 if __name__ == "__main__":
 
-    """board = [
+    board = [
         random.randint(0, N - 1)
         for _ in range(N)
-    ]"""
+    ]
 
-    test_board = [4, 4, 1, 5, 3, 2, 6, 6]
-
-    problem = QueensProblem(test_board)
+    problem = QueensProblem(board)
 
     print("\nRandom Board")
-    print(test_board)
+    print(board)
 
     print("\nConflicts")
     print(
-        count_conflicts(test_board)
+        count_conflicts(board)
     )
 
     print("\nPossible Actions")
     
-    actions = problem.actions(test_board)
+    actions = problem.actions(board)
 
     print(
         f"{len(actions)} actions available"
@@ -251,13 +269,21 @@ if __name__ == "__main__":
 
     neighbours = generate_neighbours(
         problem,
-        test_board
+        board
     )
 
     print(
         f"{len(neighbours)} neighbours generated"
     )
 
+
     print("\nHill Climbing:")
-    current = hill_climbing(problem, test_board)
+    current = hill_climbing(problem, board)
     print(current)
+    print("conflicts:", count_conflicts(current))
+
+
+    print("\nSimulated Annealing:")
+    current = simulated_annealing(problem, board)
+    print(current)
+    print("conflicts:", count_conflicts(current))

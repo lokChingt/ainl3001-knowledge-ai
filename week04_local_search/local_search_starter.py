@@ -177,16 +177,30 @@ def hill_climbing(problem, start_board):
 
 
     current = start_board
+    current_conflicts = count_conflicts(current)
+    sideway_move_count = 0
 
-    min_conflicts = count_conflicts(current)
-
-    while min_conflicts > 0:
+    while current_conflicts > 0:
         neighbours = generate_neighbours(
             problem,
             current
         )
 
-        current, min_conflicts = lowest_conflicts(neighbours)
+        best_neighbour, best_neighbour_conflicts = lowest_conflicts(neighbours)
+
+        if best_neighbour_conflicts > current_conflicts:
+            print("** Worse neighbours, stopping")
+            break
+
+        elif best_neighbour_conflicts == current_conflicts:
+            sideway_move_count += 1
+            
+            if sideway_move_count > 100:
+                print("** Stuck in infinite flat loop")
+                break
+
+        current = best_neighbour
+        current_conflicts = best_neighbour_conflicts
 
     return current
 

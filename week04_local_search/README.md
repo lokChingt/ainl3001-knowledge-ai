@@ -584,13 +584,22 @@ Your Git history should show the development of your solution over time.
 Complete these after finishing the main tasks.
 
 1. What is the difference between search and optimisation?
+  - Search find the path from the initial state to the goal state, while optimisation compares and moves to the best neighbour at each step. 
 2. Why does an optimisation problem require a way to evaluate candidate solutions?
+  - To find the best solution and continue to improve
 3. Why can Hill Climbing become stuck in a local minimum?
+  - When the neighbours are worse than the current state, causing the algorithm to struggle finding a better solution.
 4. What is a plateau?
+  - When the neighbours have the same cost as the current state, causing the algorithm to struggle finding the best one. 
 5. How does Simulated Annealing attempt to overcome the limitations of Hill Climbing?
+  - Simulated Annealing can overcome the limitation of stucking in a local minimum by accepting worse neighbour with probability. 
 6. What is the difference between deterministic and stochastic search?
+  - When given the same initial state and input, deterministic search will follow the exact sequence of steps every time, while stochastic search involves randomness and produce completely different paths. 
 7. How did the `Problem` representation allow us to represent both a grid world and N-Queens?
+  - The `Problem` represents the rule of the world, including the initial state, available actions, result of an action and the goal state. 
+  - These are the base structure of every problems. Using this base class, we can represent different problems without modify the code. 
 8. How do optimisation techniques such as these relate to Machine Learning?
+  - They share the same concept of repeating the steps of finding the best solution and improving. 
 
 
 # Extensions

@@ -251,6 +251,19 @@ def simulated_annealing(problem, start_board):
 
 
 # --------------------------------------------------
+# EXTENSION 1 - VISUALISE THE BOARD
+# --------------------------------------------------
+def show_board(board):
+    for row in range(N):
+        for col in range(N):
+            if board[col] == row:
+                print("Q", end=" ")
+            else:
+                print(".", end=" ")
+        print("")
+
+
+# --------------------------------------------------
 # TESTING AREA
 # --------------------------------------------------
 
@@ -289,15 +302,18 @@ if __name__ == "__main__":
     print(
         f"{len(neighbours)} neighbours generated"
     )
+    show_board(board)
 
 
     print("\nHill Climbing:")
     current = hill_climbing(problem, board)
     print(current)
     print("conflicts:", count_conflicts(current))
+    show_board(current)
 
 
     print("\nSimulated Annealing:")
     current = simulated_annealing(problem, board)
     print(current)
     print("conflicts:", count_conflicts(current))
+    show_board(current)

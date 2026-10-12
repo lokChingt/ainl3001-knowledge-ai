@@ -264,6 +264,27 @@ def show_board(board):
 
 
 # --------------------------------------------------
+# EXTENSION 2 - RANDOM RESTART HILL CLIMBING
+# --------------------------------------------------
+def random_restart_hill_climbing(problem, board):
+    max_restarts = 10
+    random_state = [
+        random.randint(0, N - 1)
+        for _ in range(N)
+    ]
+
+    for _ in range(max_restarts):
+        result = hill_climbing(problem, board)
+
+        if count_conflicts(result) == 0:
+            return result
+
+        result = hill_climbing(problem, random_state)
+
+    return result
+
+
+# --------------------------------------------------
 # TESTING AREA
 # --------------------------------------------------
 
@@ -273,6 +294,8 @@ if __name__ == "__main__":
         random.randint(0, N - 1)
         for _ in range(N)
     ]
+
+    #board = [7, 2, 2, 0, 7, 5, 1, 6]
 
     problem = QueensProblem(board)
 
@@ -317,3 +340,19 @@ if __name__ == "__main__":
     print(current)
     print("conflicts:", count_conflicts(current))
     show_board(current)
+
+    # Extension 2
+    print("\nRandom Restart Hill Climbing:")
+    current = random_restart_hill_climbing(problem, board)
+    print(current)
+    print("conflicts:", count_conflicts(current))
+    show_board(current)
+
+    print("""
+        Does performance improve?
+        - yes
+        Why might random restarts help?
+        - it restarts to escape the local optimum
+        What additional computational cost do they introduce?
+        - increase in execution time
+        """)

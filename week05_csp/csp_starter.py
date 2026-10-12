@@ -33,10 +33,10 @@ example_assignment = {
 print("Manual CSP Exploration")
 print(example_assignment)
 print("\nQuestions:")
-print("1. Is this assignment valid?")
-print("2. Which neighbouring pairs violate a constraint?")
-print("3. How could you correct the assignment?")
-print("4. Why is it useful to detect violations early?")
+print("1. Is this assignment valid?\n    - not valid")
+print("2. Which neighbouring pairs violate a constraint?\n    - (WA, NT), (SA, V)")
+print("3. How could you correct the assignment?\n    - NT -> Red, NSW -> Red, V -> Queen")
+print("4. Why is it useful to detect violations early?\n    - Avoid trying all possible combinations")
 
 # --------------------------------------------------
 # TASK 1 — CSP REPRESENTATION
@@ -75,8 +75,13 @@ def is_valid_assignment(assignment):
     # 2. If BOTH regions have been assigned, compare their colours.
     # 3. Return False if neighbouring regions have the same colour.
     # 4. Otherwise return True.
-    pass
+    
+    for region1, region2 in constraints:
+        if region1 in assignment and region2 in assignment:
+            if assignment[region1] == assignment[region2]:
+                return False
 
+    return True
 
 # --------------------------------------------------
 # TASK 3 AND TASK 5 — VARIABLE SELECTION

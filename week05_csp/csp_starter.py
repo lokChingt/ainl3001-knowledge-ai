@@ -91,26 +91,32 @@ def is_valid_assignment(assignment):
 # TASK 3 AND TASK 5 — VARIABLE SELECTION
 # --------------------------------------------------
 
-def select_unassigned_variable(assignment):
+def simple_selection(assignment):
     """Choose the next unassigned region.
 
     Task 3: First return the FIRST unassigned region.
 
-    Task 5: Replace that approach with MRV (Minimum Remaining Values):
-    choose the unassigned region with the FEWEST currently legal
-    colours. Break ties by keeping the first region in variables.
     """
     # TASK 3 TODO:
     # Return the first variable not in assignment, or None if all
     # variables have been assigned.
-    """
+    
     for variable in variables:
         if variable not in assignment.keys():
             return variable
 
     return None
-    """
     
+    
+def MRV_selection(assignment):
+    """
+
+    Task 5: Replace that approach with MRV (Minimum Remaining Values):
+    choose the unassigned region with the FEWEST currently legal
+    colours. Break ties by keeping the first region in variables.
+
+    """
+
     # TASK 5 TODO (after backtracking works):
     # For each unassigned variable, temporarily try each colour,
     # check is_valid_assignment(), and undo the temporary assignment.
@@ -141,7 +147,7 @@ def select_unassigned_variable(assignment):
 # TASK 3 — BACKTRACKING SEARCH
 # --------------------------------------------------
 
-def backtracking_search(assignment):
+def backtracking_search(assignment, selection_function, attempts):
     """Return a complete valid assignment, or None if none exists."""
     # TODO:
     # 1. If every variable has been assigned, return a COPY.
@@ -152,16 +158,17 @@ def backtracking_search(assignment):
     # 6. Otherwise remove the temporary assignment (backtrack).
     # 7. Return None if every colour fails.
     
-    unsigned_variable = select_unassigned_variable(assignment)
+    unsigned_variable = selection_function(assignment)
 
     if  unsigned_variable == None:
         return assignment
 
     for colour in domains[unsigned_variable]:
         assignment[unsigned_variable] = colour
+        attempts[0] += 1
         # check if valid
         if is_valid_assignment(assignment):
-            result = backtracking_search(assignment)
+            result = backtracking_search(assignment, selection_function, attempts)
             if result is not None:
                 return result
 
@@ -181,6 +188,13 @@ def backtracking_search(assignment):
 # complete assignments. Why can backtracking avoid checking all 729?
 
 # because it will backtrack once the result is invalid, this saves time trying other invalid combinations
+
+
+# --------------------------------------------------
+# EXTENSION 1: COUNT ATTEMPTED ASSIGNMENTS
+# --------------------------------------------------
+
+attempts = [0]
 
 
 # --------------------------------------------------
@@ -204,7 +218,7 @@ if __name__ == "__main__":
     print(is_valid_assignment(partial_assignment))  # Expected: True
 
     print("\nSearching for a solution...")
-    solution = backtracking_search({})
+    solution = backtracking_search({}, simple_selection, attempts)
     print("Solution:", solution)
 
     if solution is not None:
@@ -216,6 +230,8 @@ if __name__ == "__main__":
         print("No solution yet. Complete the TODO sections.")
 
     print("\nPossible complete assignments:", 3 ** len(variables))
+    print("Attempted colour assignments:", attempts[0])
+
     print("\nReflection:")
     print("1. What causes backtracking?\n"
     "    - invalid result")
@@ -225,3 +241,38 @@ if __name__ == "__main__":
     "    - it forces the algorithm to fail and discover the dead end early")
     print("4. How could this model represent timetabling?\n"
     "    - some classes may be flexible and some may not, using MRV can prevent the flexible classes from blocking the strict ones")
+
+
+    # Extension 1: Count attempted assignment
+    print("\n\n---- Extension 1: Count attempted assignment ---- ")
+    function_list = [simple_selection, MRV_selection]
+
+    # temp variables and domains to get different results
+    variables = ['V', 'NSW', 'Q', 'WA', 'NT', 'SA']
+
+    domains = {
+        'V': ['Blue', 'Green', 'Red'],
+        'NSW': ['Blue', 'Green', 'Red'],
+        'Q': ['Blue', 'Green', 'Red'],
+        'WA': ['Red', 'Green', 'Blue'], 
+        'NT': ['Red', 'Green', 'Blue'], 
+        'SA': ['Red', 'Green', 'Blue']
+    }
+
+    print("\nPossible complete assignments:", 3 ** len(variables))
+
+    for func in function_list:
+        attempts = [0]
+
+        print(f"\nBacktracking with {func.__name__}:")
+        solution = backtracking_search({}, func, attempts)
+        print("Solution:", solution)
+        print("Attempted colour assignments:", attempts[0])
+
+
+    """
+    Did MRV reduce the number of attempts? - yes, from 25 to 10
+    Did both strategies find a valid solution? - yes
+    Why might the results differ? - MRV reveals the failure early to reduce the attempt to invalid combinations
+    Is this small problem sufficient to demonstrate the benefits of MRV? - no, larger problem should be able to demostrate a larger different in results.
+    """

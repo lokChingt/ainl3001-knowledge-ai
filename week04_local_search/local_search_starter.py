@@ -30,6 +30,7 @@ Tasks
 
 import math
 import random
+import time
 
 from queens_problem import QueensProblem
 
@@ -273,13 +274,15 @@ def random_restart_hill_climbing(problem, board):
         for _ in range(N)
     ]
 
-    for _ in range(max_restarts):
-        result = hill_climbing(problem, board)
+    best_result = hill_climbing(problem, board)
 
-        if count_conflicts(result) == 0:
-            return result
+    for _ in range(max_restarts):
+        if count_conflicts(best_result) == 0:
+            return best_result
 
         result = hill_climbing(problem, random_state)
+        if count_conflicts(result) < count_conflicts(best_result):
+            best_result = result
 
     return result
 
@@ -329,30 +332,72 @@ if __name__ == "__main__":
 
 
     print("\nHill Climbing:")
+    time_start = time.time()
     current = hill_climbing(problem, board)
+    time_end = time.time()
     print(current)
     print("conflicts:", count_conflicts(current))
     show_board(current)
+    print("Time used:", time_end - time_start)
 
 
     print("\nSimulated Annealing:")
+    time_start = time.time()
     current = simulated_annealing(problem, board)
+    time_end = time.time()
     print(current)
     print("conflicts:", count_conflicts(current))
     show_board(current)
+    print("Time used:", time_end - time_start)
+    
 
     # Extension 2
     print("\nRandom Restart Hill Climbing:")
+    time_start = time.time()
     current = random_restart_hill_climbing(problem, board)
+    time_end = time.time()
     print(current)
     print("conflicts:", count_conflicts(current))
     show_board(current)
+    print("Time used:", time_end - time_start)
+    
 
     print("""
-        Does performance improve?
-        - yes
-        Why might random restarts help?
-        - it restarts to escape the local optimum
-        What additional computational cost do they introduce?
-        - increase in execution time
-        """)
+Does performance improve?
+    - yes
+Why might random restarts help?
+    - it restarts to escape the local optimum
+What additional computational cost do they introduce?
+    - increase in execution time
+""")
+
+    # Extension 3
+    print("N = 20")
+    print("""
+Runtime:
+- Hill climbing: 0.47604
+- Simulated Annealing: 0.00397
+- Random Restart Hill Climbing: 0.48957
+Number of possible neighbours
+- 380
+Final solution quality
+- Original: 18 conflicts
+- Hill climbing: 1 conflict
+- Simulated Annealing: 4 conflicts
+- Random Restart Hill Climbing: 0 conflict
+""")
+
+    print("N = 50")
+    print("""
+Runtime:
+- Hill climbing: 18.75115
+- Simulated Annealing: 0.02526
+- Random Restart Hill Climbing: 206.06307
+Number of possible neighbours
+- 2450
+Final solution quality
+- Original: 67 conflicts
+- Hill climbing: 4 conflicts
+- Simulated Annealing: 22 conflicts
+- Random Restart Hill Climbing: 2 conflicts
+""")

@@ -33,10 +33,14 @@ example_assignment = {
 print("Manual CSP Exploration")
 print(example_assignment)
 print("\nQuestions:")
-print("1. Is this assignment valid?\n    - not valid")
-print("2. Which neighbouring pairs violate a constraint?\n    - (WA, NT), (SA, V)")
-print("3. How could you correct the assignment?\n    - NT -> Red, NSW -> Red, V -> Queen")
-print("4. Why is it useful to detect violations early?\n    - Avoid trying all possible combinations")
+print("1. Is this assignment valid?\n"
+"    - not valid")
+print("2. Which neighbouring pairs violate a constraint?\n"
+"    - (WA, NT), (SA, V)")
+print("3. How could you correct the assignment?\n"
+"    - NT -> Red, NSW -> Red, V -> Queen")
+print("4. Why is it useful to detect violations early?\n"
+"    - Avoid trying all possible combinations")
 
 # --------------------------------------------------
 # TASK 1 — CSP REPRESENTATION
@@ -99,17 +103,38 @@ def select_unassigned_variable(assignment):
     # TASK 3 TODO:
     # Return the first variable not in assignment, or None if all
     # variables have been assigned.
-    #
-    # TASK 5 TODO (after backtracking works):
-    # For each unassigned variable, temporarily try each colour,
-    # check is_valid_assignment(), and undo the temporary assignment.
-    # Count legal colours and choose the variable with the fewest.
-    
+    """
     for variable in variables:
         if variable not in assignment.keys():
             return variable
 
     return None
+    """
+    
+    # TASK 5 TODO (after backtracking works):
+    # For each unassigned variable, temporarily try each colour,
+    # check is_valid_assignment(), and undo the temporary assignment.
+    # Count legal colours and choose the variable with the fewest.
+    legal_colours = {}
+
+    for variable in variables:
+        # find the unassigned variables
+        if variable not in assignment.keys():
+            # temp assign colour
+            for colour in domains[variable]:
+                assignment[variable] = colour
+                # check if valid
+                if is_valid_assignment(assignment):
+                    # count legal colours
+                    if variable not in legal_colours:
+                        legal_colours[variable] = 1
+                    else:
+                        legal_colours[variable] += 1 
+
+                # undo temp assignment
+                del assignment[variable]
+
+    return min(legal_colours, key=legal_colours.get, default=None)
 
 
 # --------------------------------------------------
@@ -155,6 +180,8 @@ def backtracking_search(assignment):
 # Six regions with three possible colours each give 3 ** 6 = 729
 # complete assignments. Why can backtracking avoid checking all 729?
 
+# because it will backtrack once the result is invalid, this saves time trying other invalid combinations
+
 
 # --------------------------------------------------
 # TESTING AREA
@@ -190,7 +217,11 @@ if __name__ == "__main__":
 
     print("\nPossible complete assignments:", 3 ** len(variables))
     print("\nReflection:")
-    print("1. What causes backtracking?\n   - invalid result")
-    print("2. Why can backtracking be faster than brute force?")
-    print("3. Why might MRV reduce search?")
-    print("4. How could this model represent timetabling?")
+    print("1. What causes backtracking?\n"
+    "    - invalid result")
+    print("2. Why can backtracking be faster than brute force?\n"
+    "    - no need to try all combinations. Backtracking happens once it is not valid while brute force continues")
+    print("3. Why might MRV reduce search?\n"
+    "    - it forces the algorithm to fail and discover the dead end early")
+    print("4. How could this model represent timetabling?\n"
+    "    - some classes may be flexible and some may not, using MRV can prevent the flexible classes from blocking the strict ones")

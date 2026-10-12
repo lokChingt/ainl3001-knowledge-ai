@@ -104,7 +104,12 @@ def select_unassigned_variable(assignment):
     # For each unassigned variable, temporarily try each colour,
     # check is_valid_assignment(), and undo the temporary assignment.
     # Count legal colours and choose the variable with the fewest.
-    pass
+    
+    for variable in variables:
+        if variable not in assignment.keys():
+            return variable
+
+    return None
 
 
 # --------------------------------------------------
@@ -121,7 +126,26 @@ def backtracking_search(assignment):
     # 5. Return the recursive result if a solution was found.
     # 6. Otherwise remove the temporary assignment (backtrack).
     # 7. Return None if every colour fails.
-    pass
+    
+    unsigned_variable = select_unassigned_variable(assignment)
+
+    if  unsigned_variable == None:
+        return assignment
+
+    for colour in domains[unsigned_variable]:
+        assignment[unsigned_variable] = colour
+        # check if valid
+        if is_valid_assignment(assignment):
+            result = backtracking_search(assignment)
+            if result is not None:
+                return result
+
+        # if not valid
+        del assignment[unsigned_variable]
+
+    return None
+
+
 
 
 # --------------------------------------------------
@@ -166,7 +190,7 @@ if __name__ == "__main__":
 
     print("\nPossible complete assignments:", 3 ** len(variables))
     print("\nReflection:")
-    print("1. What causes backtracking?")
+    print("1. What causes backtracking?\n   - invalid result")
     print("2. Why can backtracking be faster than brute force?")
     print("3. Why might MRV reduce search?")
     print("4. How could this model represent timetabling?")

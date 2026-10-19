@@ -168,7 +168,7 @@ def minimax(state, maximizing, counter):
         return utility(state)
 
     if maximizing == True:
-        max_score = float('-inf')
+        max_score = float("-inf")
 
         for move in available_moves(state):
             new_board = make_move(state, move, "X")
@@ -178,7 +178,7 @@ def minimax(state, maximizing, counter):
 
         return max_score
     else:
-        min_score = float('inf')
+        min_score = float("inf")
 
         for move in available_moves(state):
             new_board = make_move(state, move, "O")
@@ -234,7 +234,40 @@ def alpha_beta(state, maximizing, alpha, beta, counter):
     # - MAX updates alpha; MIN updates beta.
     # - Stop exploring remaining moves if alpha >= beta.
     # - Count visited nodes exactly as in minimax().
-    pass
+    
+    counter["nodes"] += 1
+    
+    if is_terminal(state):
+        return utility(state)
+
+    if maximizing == True:
+        max_score = float('-inf')
+
+        for move in available_moves(state):
+            new_board = make_move(state, move, "X")
+            score = alpha_beta(new_board, False, alpha, beta, counter)
+
+            max_score = max(max_score, score)
+            alpha = max(alpha, max_score)
+
+            if alpha >= beta:
+                break
+
+        return max_score
+    else:
+        min_score = float('inf')
+
+        for move in available_moves(state):
+            new_board = make_move(state, move, "O")
+            score = alpha_beta(new_board, True, alpha, beta, counter)
+
+            min_score = min(min_score, score)
+            beta = min(beta, min_score)
+
+            if alpha >= beta:
+                break
+
+        return min_score
 
 
 # --------------------------------------------------
@@ -246,7 +279,26 @@ def best_move_alpha_beta(state, counter):
     # TODO: Like best_move(), but call alpha_beta().
     # Start alpha at -infinity and beta at +infinity.
     # Update alpha after each candidate X move.
-    pass
+    
+    if is_terminal(state):
+            return None
+    
+    best_score = float("-inf")
+    best_move = None
+    alpha = float("-inf")
+    beta = float("inf")
+    
+    for move in available_moves(state):
+        new_board = make_move(state, move, "X")
+        score = alpha_beta(new_board, False, alpha, beta, counter)
+
+        if score > best_score:
+            best_score = score
+            best_move = move
+
+    alpha = max(alpha, best_score)
+
+    return best_move
 
 
 # --------------------------------------------------

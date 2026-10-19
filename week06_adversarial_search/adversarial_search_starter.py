@@ -330,7 +330,14 @@ if __name__ == "__main__":
         print_board(make_move(board, move_minimax, "X"))
 
     print("\nReflection:")
-    print("1. Why is Tic-Tac-Toe a search problem?")
-    print("2. Why does Minimax assume an optimal opponent?")
-    print("3. What is the purpose of a utility function?")
-    print("4. What happens as games become larger?")
+    print("1. Why is Tic-Tac-Toe a search problem?\n" \
+    "   - because the player need to explore possible future moves to decide which move is the best\n")
+    print("2. Why does Minimax assume an optimal opponent?\n" \
+    "   - to choose the next move that bring the best result even if the player plays well\n" \
+    "   - it is risky to choose the move when assuming the opponent will make mistake\n")
+    print("3. What is the purpose of a utility function?\n" \
+    "   - to allow minimax to compare, find the best possible result and choose the best move\n")
+    print("4. What happens as games become larger?\n" \
+    "   - increase in possible moves, require more time and memory\n" \
+    "   - the different in the nodes visited between minimax and alpha-beta will increase\n" \
+    "   - because alpha-beta skips visiting irrelevant branches\n")

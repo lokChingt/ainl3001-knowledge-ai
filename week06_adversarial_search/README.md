@@ -101,8 +101,8 @@ Record your results:
 
 | Algorithm | Chosen move | Nodes visited |
 |---|---|---|
-| Minimax | | |
-| Alpha-Beta | | |
+| Minimax | 5 | 31 |
+| Alpha-Beta | 5 | 28 |
 
 Did both choose the same move? Which visited fewer nodes? Does Alpha-Beta always prune the same amount regardless of move ordering?
 

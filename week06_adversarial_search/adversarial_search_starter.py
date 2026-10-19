@@ -118,9 +118,11 @@ def check_winner(state):
 def is_terminal(state):
     """Return True for a win or a full board (draw)."""
     # TODO: Detect a winner OR no remaining empty cells.
-    
-    return check_winner(state) or False if available_moves(state) else True
-    
+
+    if check_winner(state) or available_moves(state) == None:
+        return True
+    else:
+        return False    
 
 
 # --------------------------------------------------
@@ -136,11 +138,11 @@ def utility(state):
     winner = check_winner(state)
 
     if winner == "X":
-        return "+1"
+        return 1
     elif winner == "O":
-        return "-1"
+        return -1
     else:
-        return "0"
+        return 0
 
 
 # --------------------------------------------------
@@ -159,7 +161,33 @@ def minimax(state, maximizing, counter):
     # 3. For X (MAX), recursively choose the highest score.
     # 4. For O (MIN), recursively choose the lowest score.
     # Use make_move() to avoid changing the original board.
-    pass
+    
+    counter["nodes"] += 1
+
+    if is_terminal(state):
+        return utility(state)
+
+    if maximizing == True:
+        max_score = float('-inf')
+
+        for move in available_moves(state):
+            new_board = make_move(state, move, "X")
+            score = minimax(new_board, False, counter)
+
+            max_score = max(max_score, score)
+
+        return max_score
+    else:
+        min_score = float('inf')
+
+        for move in available_moves(state):
+            new_board = make_move(state, move, "O")
+            score = minimax(new_board, True, counter)
+
+            min_score = min(min_score, score)
+
+        return min_score
+
 
 
 # --------------------------------------------------
@@ -174,7 +202,22 @@ def best_move(state, counter):
     # TODO: Try each legal X move, call minimax() for O's turn,
     # and return the move with the highest score.
     # If the board is terminal, return None.
-    pass
+
+    if is_terminal(state):
+        return None
+
+    best_score = float("-inf")
+    best_move = None
+    
+    for move in available_moves(state):
+        new_board = make_move(state, move, "X")
+        score = minimax(new_board, False, counter)
+
+        if score > best_score:
+            best_score = score
+            best_move = move
+
+    return best_move
 
 
 # --------------------------------------------------

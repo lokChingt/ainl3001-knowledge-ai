@@ -54,12 +54,17 @@ WINNING_LINES = [
 def print_board(state):
     """Display the nine cells as a 3-by-3 board."""
     # TODO: Print three rows of three cells.
-    for i, ele in enumerate(state):
+    for i, cell in enumerate(state):
+        """
+        if cell == " ":
+            cell = str(i)
+        """
         if (i+1) % 3 == 0:
-            print(f"{ele}", end="")
-            print("\n--+---+--")
+            print(f"{cell}")
+            if i != len(board) - 1:
+                print("--+---+--")
         else:
-            print(f"{ele} | ", end="")
+            print(f"{cell} | ", end="")
 
 
 # --------------------------------------------------
@@ -119,7 +124,7 @@ def is_terminal(state):
     """Return True for a win or a full board (draw)."""
     # TODO: Detect a winner OR no remaining empty cells.
 
-    if check_winner(state) or available_moves(state) == None:
+    if check_winner(state) or available_moves(state) == []:
         return True
     else:
         return False    
@@ -341,3 +346,45 @@ if __name__ == "__main__":
     "   - increase in possible moves, require more time and memory\n" \
     "   - the different in the nodes visited between minimax and alpha-beta will increase\n" \
     "   - because alpha-beta skips visiting irrelevant branches\n")
+
+
+    # --- Task 4: interaction (Human vs AI) ---
+    # Create a copy of the board for updating
+    new_board = board.copy()
+    print_board(new_board) # display the origainl board
+
+    step_count = 0
+
+    # Continue playing until someone wins or draw
+    while is_terminal(new_board) is False:
+        step_count += 1
+
+        # ask for next move from human player
+        move = int(input("\nYou are O.\nWhat is your next move? (e.g. 1, 2)\n"))
+
+        # check if the input move is valid
+        while move not in available_moves(new_board):
+            move = int(input("\nYou are O.\nInvalid move. Try again (e.g. 1, 2)\n"))
+
+        # enter the move and print the updated board
+        if move is not None:
+            print("\nBoard after Human move:")
+            new_board = make_move(new_board, move, "O")
+            print_board(new_board)
+
+        # AI's turn
+        move_minimax = best_move(new_board, minimax_counter)
+
+        # enter the move and print the updated board
+        if move_minimax is not None:
+            print("\nBoard after AI move:")
+            new_board = make_move(new_board, move_minimax, "X")
+            print_board(new_board)
+
+    if is_terminal(new_board):
+        # display end game and the winner
+        print(f"\nEnd Game in {step_count} rounds!")
+        if check_winner(new_board):
+            print(f"Congrats Winner {check_winner(new_board)}")
+        else:
+            print("This is a tie. Everyone Wins!")

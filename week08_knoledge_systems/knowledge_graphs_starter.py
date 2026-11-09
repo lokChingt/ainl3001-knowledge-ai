@@ -19,13 +19,22 @@ Run this file directly from VS Code or the command line.
 # Alice teaches AI
 knowledge_graph = {
     # TODO: add the entities and relationships
+
+    "Alice": {
+        "works_at": "TU_Dublin",
+        "teaches": "AI"
+    },
+
+    "TU_Dublin": {
+        "located_in": "Dublin"
+    }
 }
 
 
 def query_graph(graph, entity, relationship):
     """TASK 2: Return the related entity, or None if not found."""
     # TODO: Look up entity and then relationship safely.
-    pass
+    return graph[entity][relationship]
 
 
 # TASK 3 — EXPERT SYSTEM KNOWLEDGE BASE (provided)
@@ -51,7 +60,16 @@ def forward_chaining(known_facts, rules):
     4. Stop when a full pass produces no new facts.
     """
     # TODO
-    pass
+
+    inferred_facts = set(known_facts)
+    explanations = {}
+
+    for conditions, conclusion in rules:
+        if all(condition in inferred_facts for condition in conditions) and conclusion not in inferred_facts:
+            inferred_facts.add(conclusion)
+            explanations[conclusion] = conditions
+
+    return inferred_facts, explanations
 
 
 def explain(conclusion, initial_facts, explanations):
@@ -62,7 +80,20 @@ def explain(conclusion, initial_facts, explanations):
     Otherwise return '<fact> is not established'.
     """
     # TODO
-    pass
+    
+    if conclusion in initial_facts:
+        return f"{conclusion} was given as an initial fact"
+
+    if conclusion in explanations:
+        immed_conditions = explanations[conclusion]
+        conditions = ""
+
+        if immed_conditions[0] in explanations:
+            conditions = explanations[immed_conditions[0]]
+        
+        return f"{conclusion} inferred from {immed_conditions} {conditions}"
+
+    return f"{conclusion} is not established"
 
 
 if __name__ == "__main__":
@@ -73,6 +104,8 @@ if __name__ == "__main__":
     print("Hospital --located_in--> Dublin")
     print("Doctor --specialises_in--> Cardiology")
     print("Questions: Which are entities? Which are relationships?")
+    print("Entities: Doctor, Hospital, Dublin, Cardiology")
+    print("Relationships: works_at, located_in, specialises_in")
 
     print("\nTASKS 1–2 — KNOWLEDGE GRAPH QUERIES")
     for entity, relation in [
